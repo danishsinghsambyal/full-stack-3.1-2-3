@@ -1,0 +1,71 @@
+// App.jsx
+import React from "react";
+
+// Base class: Person
+class Person {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  displayInfo() {
+    return Name: ${this.name}, Age: ${this.age};
+  }
+}
+
+// Subclass: Student
+class Student extends Person {
+  constructor(name, age, course) {
+    super(name, age);
+    this.course = course;
+  }
+
+  displayInfo() {
+    return Student Name: ${this.name}, Age: ${this.age}, Course: ${this.course};
+  }
+}
+
+// Subclass: Teacher
+class Teacher extends Person {
+  constructor(name, age, subject) {
+    super(name, age);
+    this.subject = subject;
+  }
+
+  displayInfo() {
+    return Teacher Name: ${this.name}, Age: ${this.age}, Subject: ${this.subject};
+  }
+}
+
+// Reusable Card component
+const Card = ({ text }) => {
+  const cardStyle = {
+    border: "1px solid #ccc",
+    padding: "16px",
+    margin: "12px",
+    borderRadius: "8px",
+    width: "300px",
+    boxShadow: "2px 2px 10px #aaa",
+    textAlign: "center",
+  };
+
+  return <div style={cardStyle}>{text}</div>;
+};
+
+const App = () => {
+  // Create instances
+  const student1 = new Student("Alice", 20, "Computer Science");
+  const teacher1 = new Teacher("Mr. Smith", 45, "Mathematics");
+
+  const people = [student1, teacher1];
+
+  return (
+    <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+      {people.map((person, index) => (
+        <Card key={index} text={person.displayInfo()} />
+      ))}
+    </div>
+  );
+};
+
+export default App;
