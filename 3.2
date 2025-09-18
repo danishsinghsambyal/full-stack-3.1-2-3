@@ -1,0 +1,184 @@
+full stack 3.2
+App.jsx
+import React from "react";
+import Library from "./Library";
+
+const App = () => {
+  return (
+    <div>
+      <Library />
+    </div>
+  );
+};
+
+export default App;
+
+
+BookCard.jsx
+import React from "react";
+
+const BookCard = ({ title, author, onRemove }) => {
+  return (
+    <li
+      style={{
+        border: "1px solid #ddd",
+        padding: "10px",
+        marginBottom: "10px",
+        borderRadius: "5px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <span>
+        <strong>{title}</strong> by {author}
+      </span>
+      <button
+        onClick={onRemove}
+        style={{
+          backgroundColor: "red",
+          color: "white",
+          border: "none",
+          padding: "5px 10px",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Remove
+      </button>
+    </li>
+  );
+};
+
+export default BookCard;
+
+
+Library.jsx
+import React, { useState } from "react";
+import BookCard from "./Bookcard";
+import "./Library.css"; // styling file
+
+const Library = () => {
+  const [books, setBooks] = useState([
+    { id: 1, title: "1984", author: "George Orwell" },
+    { id: 2, title: "The Great Gatsby", author: "F. Scott Fitzgerald" },
+    { id: 3, title: "To Kill a Mockingbird", author: "Harper Lee" },
+  ]);
+
+  const [search, setSearch] = useState("");
+  const [newTitle, setNewTitle] = useState("");
+  const [newAuthor, setNewAuthor] = useState("");
+
+  const filteredBooks = books.filter(
+    (book) =>
+      book.title.toLowerCase().includes(search.toLowerCase()) ||
+      book.author.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const handleAddBook = (e) => {
+    e.preventDefault();
+    if (newTitle.trim() && newAuthor.trim()) {
+      setBooks([
+        ...books,
+        { id: Date.now(), title: newTitle, author: newAuthor },
+      ]);
+      setNewTitle("");
+      setNewAuthor("");
+    }
+  };
+
+  const handleRemoveBook = (id) => {
+    setBooks(books.filter((book) => book.id !== id));
+  };
+
+  return (
+    <div className="library-container" >
+      <h2>Library Management</h2>
+
+      {/* Search */}
+      <input
+        type="text"
+        placeholder="Search by title or author"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      {/* Add Book Form */}
+      <form onSubmit={handleAddBook}>
+        <input
+          type="text"
+          placeholder="New book title"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="New book author"
+          value={newAuthor}
+          onChange={(e) => setNewAuthor(e.target.value)}
+        />
+        <button type="submit">Add Book</button>
+      </form>
+
+      {/* Book List */}
+      <ul className="book-list">
+        {filteredBooks.length > 0 ? (
+          filteredBooks.map((book) => (
+            <BookCard
+              key={book.id}
+              title={book.title}
+              author={book.author}
+              onRemove={() => handleRemoveBook(book.id)}
+            />
+          ))
+        ) : (
+          <p>No books found</p>
+        )}
+      </ul>
+    </div>
+  );
+};
+
+export default Library;
+
+Library.css
+.library-container {
+  border: 1px solid black;
+  padding: 15px;
+  margin: 20px auto;
+  justify-content: center;
+  max-width: 600px;
+}
+
+.library-container h2 {
+  margin-bottom: 10px;
+}
+
+.library-container input {
+  padding: 8px;
+  margin: 5px 5px 10px 0;
+  border: 1px solid #ccc;
+}
+
+.library-container button {
+  padding: 8px 12px;
+  margin-left: 5px;
+  border: 1px solid #333;
+  background-color: #f8f8f8;
+  cursor: pointer;
+}
+
+.book-list {
+  list-style: none;
+  padding: 0;
+}
+
+.book-card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+}
